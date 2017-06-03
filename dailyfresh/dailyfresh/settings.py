@@ -115,7 +115,7 @@ STATICFILES_DIRS = [
 ]
 
 #开发阶段上传文件目录
-MEDIA_ROOT=os.path.join(BASE_DIR,'static')
+MEDIA_ROOT=os.path.join(BASE_DIR,'static/goods')
 #布署后的上传文件目录
 # MEDIA_ROOT='/var/www/dailyfresh/static'
 
