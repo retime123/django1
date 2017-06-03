@@ -1,7 +1,7 @@
 {%extends './base.html'%}
 
 {%block content%}
-
+{#改变css#}
 {#<style type="text/css">#}
 {#    	.left_menu_con ul li:nth-child({{active}}) a{#}
 {#			color:#ff8800;#}
@@ -9,13 +9,26 @@
 {#		}#}
 {#</style>#}
 
+{#    <div class="main_con clearfix">#}
+{#        <div class="left_menu_con clearfix">#}
+{#			<h3>用户中心</h3>#}
+{#			<ul class="poi">#}
+{#				<li><a href="/info">· 个人信息</a></li>#}
+{#				<li><a href="/order">· 全部订单</a></li>#}
+{#				<li><a href="/site">· 收货地址</a></li>#}
+{#			</ul>#}
+{#		</div>#}
+{##}
+{#    {%block content_div%}{%endblock content_div%}#}
+{#</div>#}
+
 <div class="main_con clearfix">
         <div class="left_menu_con clearfix">
 			<h3>用户中心</h3>
 			<ul class="poi">
-				<li><a href="/info" class="{{info_active}}">· 个人信息</a></li>
-				<li><a href="/order" class="{{order_active}}">· 全部订单</a></li>
-				<li><a href="/site" class="{{site_active}}">· 收货地址</a></li>
+				<li><a href="/user/info" class="{{info_active}}">· 个人信息</a></li>
+				<li><a href="/user/order" class="{{order_active}}">· 全部订单</a></li>
+				<li><a href="/user/site" class="{{site_active}}">· 收货地址</a></li>
 			</ul>
 		</div>
 

@@ -1,11 +1,13 @@
 #coding=utf-8
 from django.shortcuts import render
 from models import *
+from django.core.paginator import Paginator,Page
 
 # Create your views here.
 # 跳转到主页
 def index(request):
     t1_click = GoodsInfo.objects.filter(gtype_id = 1).order_by('-gclick')[0:3]
+    # 一对多  查询gtype_id为的所有数据,并以gclick为降序的列表
     t1_new = GoodsInfo.objects.filter(gtype_id = 1).order_by('-id')[0:4]
     t2_click = GoodsInfo.objects.filter(gtype_id=2).order_by('-gclick')[0:3]
     t2_new = GoodsInfo.objects.filter(gtype_id=2).order_by('-id')[0:4]
@@ -20,7 +22,7 @@ def index(request):
 
     context = {"title": "主页",
                'guest_cart': 1,
-               't1_click':t1_click,'t1_new':t1_new,
+               't1_click': t1_click, 't1_new': t1_new,
                't2_click': t2_click, 't2_new': t2_new,
                't3_click': t3_click, 't3_new': t3_new,
                't4_click': t4_click, 't4_new': t4_new,
@@ -29,5 +31,47 @@ def index(request):
                }
     return render(request, 'html/index.html', context)
 
+def detail(request,id):
+    # print tid
+    typeinfo = GoodsInfo.objects.get(pk=int(id))
+    tid = typeinfo.gtype_id # typeinfo里面的id号
+    title = TypeInfo.objects.get(pk=int(tid))
+
+    news = GoodsInfo.objects.filter(gtype_id=int(tid)).order_by('-id')[0:2]
+
+    context = {"title": typeinfo.gtitle,
+               't_title':title,
+               'typeinfo': tid,
+               'news': news,
+               'goods':typeinfo,
+               }
+    return render(request, 'html/detail.html', context)
+
+def list(request,tid,tin,sort):
+    typeinfo = TypeInfo.objects.get(pk=int(tid)) # get得到的是对象
+    title = typeinfo.title
+    # print type(typeinfo)
+    # 推荐商品
+    news = GoodsInfo.objects.filter(gtype_id=int(tid)).order_by('-id')[0:2]# filter得到的是列表
+    # goods_list=[]
+    if sort == '1': # 默认,最新
+        goods_list = GoodsInfo.objects.filter(gtype_id=int(tid)).order_by('-id')
+    elif sort == '2':# 价格
+        goods_list = GoodsInfo.objects.filter(gtype_id=int(tid)).order_by('-gprice')
+    elif sort == '3':# 点击
+        goods_list = GoodsInfo.objects.filter(gtype_id=int(tid)).order_by('-gclick')
+
+    page1 = Paginator(goods_list,10)
+    pages = page1.page(int(tin))
+
+    context = {"title": title,
+               't_title': title,
+               # 'goods_list':goods_list,
+               'typeinfo':tid,
+               'sort':sort,
+               'news':news,
+               'pages':pages,
+               }
+    return render(request, 'html/list.html', context)
 
 

@@ -8,12 +8,6 @@ from . import user_de
 # from df_goods import GoodsInfo
 
 # Create your views here.
-# 跳转到主页
-def index(request):
-
-    context = {"title":"主页",
-               'guest_cart': 1,}
-    return render(request,'html/index.html',context)
 
 
 # 跳转到注册页面

@@ -3,7 +3,6 @@ from django.conf.urls import url
 import views
 
 urlpatterns = [
-    url(r'^$|index/?$', views.index),# 主页
 
     url(r'^register.html/?$', views.register),# 注册
     url(r'^register_post/?$', views.register_post),# 获取内容

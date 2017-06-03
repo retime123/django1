@@ -19,9 +19,10 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^', include('df_user.urls')),
-    url(r'^cart/',include('df_cart.urls')),# 购物车
+    url(r'^', include('df_goods.urls')),# 主页/商品
+    url(r'^user/', include('df_user.urls')),# 用户登陆/注册/用户中心
+    url(r'^cart/', include('df_cart.urls')),# 购物车
     url(r'^myorder/',include('df_order.urls')),# 订单
-    url(r'^goods/', include('df_goods.urls')), # 商品
-    url(r'^tinymce/', include('tinymce.urls')),
+
+    url(r'^tinymce/', include('tinymce.urls')),# 富文本编辑器
 ]
