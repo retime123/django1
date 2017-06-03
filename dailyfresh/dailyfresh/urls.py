@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^cart/',include('df_cart.urls')),# 购物车
     url(r'^myorder/',include('df_order.urls')),# 订单
     url(r'^goods/', include('df_goods.urls')), # 商品
+    url(r'^tinymce/', include('tinymce.urls')),
 ]

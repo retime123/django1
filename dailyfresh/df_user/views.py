@@ -5,13 +5,16 @@ from django.http import HttpResponse,JsonResponse
 from django.http import HttpResponseRedirect
 from hashlib import sha1
 from . import user_de
+# from df_goods import GoodsInfo
 
 # Create your views here.
 # 跳转到主页
 def index(request):
+
     context = {"title":"主页",
                'guest_cart': 1,}
     return render(request,'html/index.html',context)
+
 
 # 跳转到注册页面
 def register(request):
@@ -103,13 +106,13 @@ def info(request):# 用户中心
     uid = request.session['user_id']
     user_email = FreshInfo.objects.get(id = uid).femail
     # 最近浏览
-    # goods_list = []
-    # goods_ids = request.COOKIES.get('goods_ids', '')
-    # if goods_ids != '':
-    #     goods_ids1 = goods_ids.split(',')  # ['']
-    #     # GoodsInfo.objects.filter(id__in=goods_ids1)
-    #     for goods_id in goods_ids1:
-    #         goods_list.append(GoodsInfo.objects.get(id=int(goods_id)))
+    goods_list = []
+    goods_ids = request.COOKIES.get('goods_ids', '')
+    if goods_ids != '':
+        goods_ids1 = goods_ids.split(',')  # ['']
+        # GoodsInfo.objects.filter(id__in=goods_ids1)
+        for goods_id in goods_ids1:
+            goods_list.append(GoodsInfo.objects.get(id=int(goods_id)))
 
     context = {'title': '用户中心',
                'user_name': request.session['user_name'],
