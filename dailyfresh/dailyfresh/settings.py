@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'df_cart',
     'df_order',
     'df_goods',
+    'tinymce',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -112,6 +113,11 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+#开发阶段上传文件目录
+MEDIA_ROOT=os.path.join(BASE_DIR,'static')
+#布署后的上传文件目录
+# MEDIA_ROOT='/var/www/dailyfresh/static'
 
 TINYMCE_DEFAULT_CONFIG = {
     'theme': 'advanced',
