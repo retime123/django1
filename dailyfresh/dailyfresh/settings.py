@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'df_user',
     'df_cart',
     'df_order',
+    'df_goods',
 )
 
 MIDDLEWARE_CLASSES = (
