@@ -84,4 +84,7 @@ def mysearch(request):
     return render(request, 'search/search.html', context)
 
 def query(request):
-    return render(request,'search/search.html')
+    context = {'title':'搜索结果',
+               }
+    return render(request,'search/search.html', context)
+    # pass
