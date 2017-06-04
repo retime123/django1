@@ -1,8 +1,8 @@
 #coding=utf-8
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from models import *
 from django.http import HttpResponse,JsonResponse
-from hashlib import sha1
+
 from df_user import user_de
 
 # Create your views here.

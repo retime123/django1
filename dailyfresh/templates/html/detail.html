@@ -2,8 +2,50 @@
 
 {%block head%}
 <script>
+
+function sum() {
+    num = parseInt($('.num_show').val());
+    price = parseFloat($('#price').text());
+    prices = num*price;
+
+    $('#prices').text(prices.toFixed(2)+'元');
+}
+
 $(function () {
 
+    var count = parseInt($('#count').text());
+{#    alert(count);#}
+    $('.add').click(function () {
+        num = parseInt($('.num_show').val());
+        if (num >= count){
+            $('.num_show').val(count);
+            return;
+        }
+        $('.num_show').val(num+1);
+        sum();
+    });
+
+     $('.minus').click(function () {
+        num = parseInt($('.num_show').val());
+        if (num <= 1){
+            $('.num_show').val(1);
+            return;
+        }
+        $('.num_show').val(num-1);
+        sum();
+    });
+
+     $('.num_show').blur(function () {
+         num = parseInt($('.num_show').val());
+        if (num <= 1){
+            $('.num_show').val(1);
+        }
+        else  if (num >= count){
+            $('.num_show').val(count);
+        }
+         sum();
+
+     })
 
 })
 
@@ -29,7 +71,7 @@ $(function () {
 			<h3>{{ goods.gtitle }}</h3>
 			<p>草莓浆果柔软多汁，味美爽口，适合速冻保鲜贮藏。草莓速冻后，可以保持原有的色、香、味，既便于贮藏，又便于外销。</p>
 			<div class="prize_bar">
-				<span class="show_pirze">¥<em>{{ goods.gprice }}元</em></span>
+				<span class="show_pirze">¥<em id="price">{{ goods.gprice }}元</em></span>
 				<span class="show_unit">单  位：{{ goods.gunit }}</span>
 			</div>
 			<div class="goods_num clearfix">
@@ -38,11 +80,14 @@ $(function () {
 					<input type="text" class="num_show fl" value="1">
 					<a href="javascript:;" class="add fr">+</a>
 					<a href="javascript:;" class="minus fr">-</a>	
-				</div> 
+				</div>
+
 			</div>
-			<div class="total">总价：<em>{{ goods.gprice }}元</em></div>
+            <div >库存剩余:<em id="count">{{ goods.gkucun }}份</em></div>
+
+			<div class="total">总价：<em id="prices">{{ goods.gprice }}元</em></div>
 			<div class="operate_btn">
-				<a href="javascript:;" class="buy_btn">立即购买</a>
+				<a href="javascript:;" class="buy_btn" >立即购买</a>
 				<a href="javascript:;" class="add_cart" id="add_cart">加入购物车</a>				
 			</div>
 		</div>
@@ -70,6 +115,30 @@ $(function () {
             {% endblock goods_div%}
 	</div>
 
+
+<div class="add_jump"></div>
+
+    <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+	<script type="text/javascript">
+		var $add_x = $('#add_cart').offset().top;
+		var $add_y = $('#add_cart').offset().left;
+
+		var $to_x = $('#show_count').offset().top;
+		var $to_y = $('#show_count').offset().left;
+
+		$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})
+		$('#add_cart').click(function(){
+			$(".add_jump").stop().animate({
+				'left': $to_y+7,
+				'top': $to_x+7},
+				"fast", function() {
+					$(".add_jump").fadeOut('fast',function(){
+						$('#show_count').html(2);
+					});
+
+			});
+		})
+	</script>
 
 
 	

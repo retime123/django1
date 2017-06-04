@@ -38,6 +38,7 @@
             </ul>
 
 			<div class="pagenation">
+                <a href="/list{{ typeinfo }}_1_{{ sort }}/">首页</a>
                 {%if pages.has_previous%}
 				    <a href="/list{{ typeinfo }}_{{ pages.number|add:-1 }}_{{ sort }}"><上一页</a>
                 {% else %}
@@ -56,6 +57,7 @@
                 {% else %}
                 <a href="" class="active">下一页></a>
             {% endif %}
+             <a href="/list{{ typeinfo }}_1_{{ sort }}/">页</a>
 			</div>
 		</div>
 

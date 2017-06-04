@@ -3,6 +3,7 @@ from django.shortcuts import render
 from models import *
 from django.core.paginator import Paginator,Page
 
+
 # Create your views here.
 # 跳转到主页
 def index(request):
@@ -32,8 +33,8 @@ def index(request):
     return render(request, 'html/index.html', context)
 
 def list(request,tid,tin,sort):
-    typeinfo = TypeInfo.objects.get(pk=int(tid)) # get得到的是对象
-    title = typeinfo.title
+    type = TypeInfo.objects.get(pk=int(tid)) # get得到的是对象
+    title = type.title
     # print type(typeinfo)
     # 推荐商品
     news = GoodsInfo.objects.filter(gtype_id=int(tid)).order_by('-id')[0:2]# filter得到的是列表
@@ -61,17 +62,26 @@ def list(request,tid,tin,sort):
 
 def detail(request,id):
     # print tid
-    typeinfo = GoodsInfo.objects.get(pk=int(id))# 对象
-    tid = typeinfo.gtype_id # typeinfo里面的id号
+    type = GoodsInfo.objects.get(pk=int(id))# 对象
+    tid = type.gtype_id # typeinfo里面的id号
 
     title = TypeInfo.objects.get(pk=int(tid))
 
     news = GoodsInfo.objects.filter(gtype_id=int(tid)).order_by('-id')[0:2]
-
-    context = {"title": typeinfo.gtitle,# 页面信息
+    # news = GoodsInfo.gtype.goodsinfo_set.order_by('-id')[0:2]
+    context = {"title": type.gtitle,# 页面信息
                't_title':title,
                'typeinfo': tid,
                'news': news,# 推荐商品
-               'goods':typeinfo,
+               'goods':type,
                }
     return render(request, 'html/detail.html', context)
+
+def mysearch(request):
+    context = {"title": '搜索',  # 页面信息
+
+               }
+    return render(request, 'search/search.html', context)
+
+def query(request):
+    return render(request,'search/search.html')

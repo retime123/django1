@@ -112,7 +112,7 @@ def info(request):# 用户中心
                'user_name': request.session['user_name'],
                'user_email': user_email,
                'page_name': 1,
-               'goods_list': goods_list,
+               'goods_list': goods_list[0:3],
                 "info_active":'active',
                }
 
