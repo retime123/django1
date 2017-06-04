@@ -1,91 +1,26 @@
-{%extends 'base_fresh.html'%}
+{%extends 'list_detail.html' %}
 
-{%block body%}
-
-	<div class="header_con">
-		<div class="header">
-			<div class="welcome fl">欢迎来到天天生鲜!</div>
-			<div class="fr">
-				{%if request.session.user_name|default:'' != ''%}
-				<div class="login_btn fl">
-					欢迎您：<em>{{request.session.user_name}}</em>
-					<span>|</span>
-					<a href="/user/logout/">退出</a>
-				</div>
-				{%else%}
-				<div class="login_btn fl">
-					<a href="/user/login.html">登录</a>
-					<span>|</span>
-					<a href="/user/register.html/">注册</a>
-				</div>
-				{%endif%}
-				<div class="user_link fl">
-					<span>|</span>
-					<a href="/user/info/">用户中心</a>
-					<span>|</span>
-					<a href="/cart/">我的购物车</a>
-					<span>|</span>
-					<a href="/myorder/">我的订单</a>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="search_bar clearfix">
-		<a href="/" class="logo fl"><img src="/static/img/logo.png"></a>
-{%if page_name == 1%}
-		<div class="sub_page_name fl">|&nbsp;&nbsp;&nbsp;&nbsp;{{title}}</div>
-		<div class="search_con fr">
-			<form method='get' action="/search/" target="_blank">
-			<input type="text" class="input_text fl" name="q" placeholder="搜索商品">
-			<input type="submit" class="input_btn fr" value="搜索">
-			</form>
-		</div>
-{%elif guest_cart|default:1 == 1%}
-		<div class="search_con fl">
-			<form method='get' action="/search/" target="_blank">
-			<input type="text" class="input_text fl" name="q" placeholder="搜索商品">
-			<input type="submit" class="input_btn fr" value="搜索">
-			</form>
-		</div>
-		<div class="guest_cart fr">
-			<a href="/cart/" class="cart_name fl">我的购物车</a>
-			<div class="goods_count fl" id="show_count">{{cart_count}}</div>
-		</div>
-{%endif%}
-	</div>
+{%block head%}
+<script>
+$(function () {
 
 
-	<div class="navbar_con">
-		<div class="navbar clearfix">
-			<div class="subnav_con fl">
-				<h1>全部商品分类</h1>	
-				<span></span>			
-				<ul class="subnav">
-                    <li><a href="/list1_1_1/" class="fruit">新鲜水果</a></li>
-                    <li><a href="/list2_1_1/" class="seafood">海鲜水产</a></li>
-                    <li><a href="/list3_1_1/" class="meet">猪牛羊肉</a></li>
-                    <li><a href="/list4_1_1/" class="egg">禽类蛋品</a></li>
-                    <li><a href="/list5_1_1/" class="vegetables">新鲜蔬菜</a></li>
-                    <li><a href="/list6_1_1/" class="ice">速冻食品</a></li>i>
-				</ul>
-			</div>
-			<ul class="navlist fl">
-				<li><a href="/">首页</a></li>
-				<li class="interval">|</li>
-				<li><a href="">手机生鲜</a></li>
-				<li class="interval">|</li>
-				<li><a href="">抽奖</a></li>
-			</ul>
-		</div>
-	</div>
+})
 
-	<div class="breadcrumb">
-		<a href="#">全部分类</a>
-		<span>></span>
-		<a href="/list{{ typeinfo }}_1_1/">{{t_title}}</a>
-		<span>></span>
+
+</script>
+{%endblock head%}
+
+
+        {%block detail_1%}
+
+            <span>></span>
 		<a href="#">商品详情</a>
-	</div>
+
+        {%endblock detail_1%}
+
+
+{%block detail_2%}
 
 	<div class="goods_detail_con clearfix">
 		<div class="goods_detail_pic fl"><img src="/static/{{ goods.gpic }}"></div>
@@ -113,22 +48,10 @@
 		</div>
 	</div>
 
-	<div class="main_wrap clearfix">
-		<div class="l_wrap fl clearfix">
-			<div class="new_goods">
-				<h3>新品推荐</h3>
-				<ul>
-					{% for new in news %}
-					<li>
-						<a href="/detail{{ new.id }}"><img src="/static/{{ new.gpic }}"></a>
-						<h4><a href="/detail{{ new.id }}">{{ new.gtitle }}</a></h4>
-						<div class="prize">￥{{ new.gprice }}</div>
-					</li>
-                    {% endfor %}
+{%endblock detail_2%}
 
-				</ul>
-			</div>
-		</div>
+	<div class="main_wrap clearfix">
+		{%block goods_div%}
 
 		<div class="r_wrap fr clearfix">
 			<ul class="detail_tab clearfix">
@@ -144,9 +67,9 @@
 			</div>
 
 		</div>
+            {% endblock goods_div%}
 	</div>
 
 
 
 	
-{% endblock body%}

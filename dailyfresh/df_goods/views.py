@@ -31,22 +31,6 @@ def index(request):
                }
     return render(request, 'html/index.html', context)
 
-def detail(request,id):
-    # print tid
-    typeinfo = GoodsInfo.objects.get(pk=int(id))
-    tid = typeinfo.gtype_id # typeinfo里面的id号
-    title = TypeInfo.objects.get(pk=int(tid))
-
-    news = GoodsInfo.objects.filter(gtype_id=int(tid)).order_by('-id')[0:2]
-
-    context = {"title": typeinfo.gtitle,
-               't_title':title,
-               'typeinfo': tid,
-               'news': news,
-               'goods':typeinfo,
-               }
-    return render(request, 'html/detail.html', context)
-
 def list(request,tid,tin,sort):
     typeinfo = TypeInfo.objects.get(pk=int(tid)) # get得到的是对象
     title = typeinfo.title
@@ -57,7 +41,7 @@ def list(request,tid,tin,sort):
     if sort == '1': # 默认,最新
         goods_list = GoodsInfo.objects.filter(gtype_id=int(tid)).order_by('-id')
     elif sort == '2':# 价格
-        goods_list = GoodsInfo.objects.filter(gtype_id=int(tid)).order_by('-gprice')
+        goods_list = GoodsInfo.objects.filter(gtype_id=int(tid)).order_by('gprice')
     elif sort == '3':# 点击
         goods_list = GoodsInfo.objects.filter(gtype_id=int(tid)).order_by('-gclick')
 
@@ -67,11 +51,27 @@ def list(request,tid,tin,sort):
     context = {"title": title,
                't_title': title,
                # 'goods_list':goods_list,
-               'typeinfo':tid,
-               'sort':sort,
-               'news':news,
+               'typeinfo':tid, #TypeInfo里面的种类id
+               'sort':sort,# 排序
+               'news':news,# 推荐商品
                'pages':pages,
                }
     return render(request, 'html/list.html', context)
 
 
+def detail(request,id):
+    # print tid
+    typeinfo = GoodsInfo.objects.get(pk=int(id))# 对象
+    tid = typeinfo.gtype_id # typeinfo里面的id号
+
+    title = TypeInfo.objects.get(pk=int(tid))
+
+    news = GoodsInfo.objects.filter(gtype_id=int(tid)).order_by('-id')[0:2]
+
+    context = {"title": typeinfo.gtitle,# 页面信息
+               't_title':title,
+               'typeinfo': tid,
+               'news': news,# 推荐商品
+               'goods':typeinfo,
+               }
+    return render(request, 'html/detail.html', context)

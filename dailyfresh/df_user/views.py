@@ -55,10 +55,10 @@ def login_handle(request):
     upwd=post.get('pwd')
     jizhu=post.get('jizhu',0)
     # 根据用户名查询对象 获得列表 列表里面是字典
-    users = FreshInfo.objects.filter(fname=uname)#[{}]
+    users = FreshInfo.objects.filter(fname=uname)#[]列表对象
     # users = FreshInfo.objects.get(fname=uname)
-
-    print users[0].fpwd
+    # print type(users)
+    # print users[0].fpwd
     # 判断是否查到用户名,如果查到则判断密码是否正确,正确则转到用户中心
     if len(users) == 1:
         s1 = sha1()
@@ -112,7 +112,7 @@ def info(request):# 用户中心
                'user_name': request.session['user_name'],
                'user_email': user_email,
                'page_name': 1,
-               # 'goods_list': goods_list,
+               'goods_list': goods_list,
                 "info_active":'active',
                }
 
