@@ -3,11 +3,11 @@ from django.shortcuts import render
 from models import *
 from django.http import HttpResponse,JsonResponse
 from hashlib import sha1
-from df_user import user_de
+from df_user import user_login
 
 # Create your views here.
 
-@user_de.login
+@user_login.login
 def myorder(request):
     uid = request.session['user_id']
     context = {"title": '订单',

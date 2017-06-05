@@ -4,7 +4,8 @@ from models import *
 from django.http import HttpResponse,JsonResponse
 from django.http import HttpResponseRedirect
 from hashlib import sha1
-from . import user_de
+from . import user_login
+from df_goods.models import *
 # from df_goods import GoodsInfo
 
 # Create your views here.
@@ -87,7 +88,7 @@ def logout(request):
     request.session.flush()# flush()清除
     return redirect('/')
 
-@user_de.login
+@user_login.login
 def info(request):# 用户中心
     # 判断是否登陆,未登录则跳转到登录页面!
     # 用装饰器
@@ -101,10 +102,16 @@ def info(request):# 用户中心
     user_email = FreshInfo.objects.get(id = uid).femail
     # 最近浏览
     goods_list = []
-    goods_ids = request.COOKIES.get('goods_ids', '')
+    goods_ids = request.COOKIES.get('liulan', '')
+    # 第一种方式:字符串
+    # if goods_ids != '':
+    #     goods_ids1 = goods_ids.split(',')  # ['']
+    #     # GoodsInfo.objects.filter(id__in=goods_ids1)
+    #     for goods_id in goods_ids1:
+    #         goods_list.append(GoodsInfo.objects.get(id=int(goods_id)))
+    # 第二种方式:字符串列表
     if goods_ids != '':
-        goods_ids1 = goods_ids.split(',')  # ['']
-        # GoodsInfo.objects.filter(id__in=goods_ids1)
+        goods_ids1 = eval(goods_ids)
         for goods_id in goods_ids1:
             goods_list.append(GoodsInfo.objects.get(id=int(goods_id)))
 
@@ -112,13 +119,13 @@ def info(request):# 用户中心
                'user_name': request.session['user_name'],
                'user_email': user_email,
                'page_name': 1,
-               'goods_list': goods_list[0:3],
+               'goods_list': goods_list,
                 "info_active":'active',
                }
 
     return render(request, 'html/user_center_info.html',context)
 
-@user_de.login
+@user_login.login
 def order(request):# 订单
     context = {"title": "用户中心",
                 'page_name': 1,
@@ -126,7 +133,7 @@ def order(request):# 订单
                }
     return render(request, 'html/user_center_order.html', context)
 
-@user_de.login
+@user_login.login
 def site(request):
     uid = request.session['user_id']
     user = FreshInfo.objects.get(id = uid)

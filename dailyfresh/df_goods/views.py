@@ -2,7 +2,7 @@
 from django.shortcuts import render
 from models import *
 from django.core.paginator import Paginator,Page
-
+from df_cart.models import *
 
 # Create your views here.
 # 跳转到主页
@@ -29,12 +29,12 @@ def index(request):
                't4_click': t4_click, 't4_new': t4_new,
                't5_click': t5_click, 't5_new': t5_new,
                't6_click': t6_click, 't6_new': t6_new,
+               'cart_count':cart_count(request),
                }
     return render(request, 'html/index.html', context)
 
 def list(request,tid,tin,sort):
-    type = TypeInfo.objects.get(pk=int(tid)) # get得到的是对象
-    title = type.title
+    typeinfo = TypeInfo.objects.get(pk=int(tid)) # get得到的是对象
     # print type(typeinfo)
     # 推荐商品
     news = GoodsInfo.objects.filter(gtype_id=int(tid)).order_by('-id')[0:2]# filter得到的是列表
@@ -49,36 +49,75 @@ def list(request,tid,tin,sort):
     page1 = Paginator(goods_list,10)
     pages = page1.page(int(tin))
 
-    context = {"title": title,
-               't_title': title,
+    context = {"title": typeinfo.title,
                # 'goods_list':goods_list,
-               'typeinfo':tid, #TypeInfo里面的种类id
+               'typeinfo':typeinfo, #TypeInfo里面的种类id
                'sort':sort,# 排序
                'news':news,# 推荐商品
                'pages':pages,
+               'cart_count': cart_count(request),
                }
     return render(request, 'html/list.html', context)
 
 
 def detail(request,id):
     # print tid
-    type = GoodsInfo.objects.get(pk=int(id))# 对象
-    tid = type.gtype_id # typeinfo里面的id号
+    goods = GoodsInfo.objects.get(pk=int(id))# 对象
+    goods.gclick = goods.gclick+1
+    goods.save()
 
-    title = TypeInfo.objects.get(pk=int(tid))
-
+    tid = goods.gtype_id # 对应typeinfo里面的id号
+    typeinfo = TypeInfo.objects.get(pk=int(tid))
     news = GoodsInfo.objects.filter(gtype_id=int(tid)).order_by('-id')[0:2]
-    # news = GoodsInfo.gtype.goodsinfo_set.order_by('-id')[0:2]
-    context = {"title": type.gtitle,# 页面信息
-               't_title':title,
-               'typeinfo': tid,
+
+    context = {"title": goods.gtitle,# 页面信息
+               'typeinfo': typeinfo,
                'news': news,# 推荐商品
-               'goods':type,
+               'goods':goods,
+               'cart_count': cart_count(request),
                }
-    return render(request, 'html/detail.html', context)
+    ret = render(request, 'html/detail.html', context)
+    # 最近浏览
+    liulan = request.COOKIES.get("liulan",'[]')# 字符串 读取cookie里的数据,没有数据--默认值''
+    # 第一种
+    # if liulan == '':
+    #     ret.set_cookie('liulan',id)
+    # else:
+    #     liulan_list = liulan.split(',')#拆分字符串,成列表
+    #     if id in liulan_list:# 去重
+    #         liulan_list.remove(id)
+    #     liulan_list.insert(0,id)#加到第一个
+    #     if len(liulan_list)>5:
+    #         liulan_list.pop()
+    #     liulan2 = ','.join(liulan_list)
+    #
+    #     print liulan2
+    #     ret.set_cookie('liulan',liulan2)
+
+    # 第二种
+    liulan_list = eval(liulan)
+    if len(liulan_list) == 0:
+        liulan_list.insert(0, id)
+    else:
+        if id in liulan_list:  # 去重
+            liulan_list.remove(id)
+        liulan_list.insert(0,id)#加到第一个
+        if len(liulan_list) > 5:
+            liulan_list.pop()
+    liulan2 = str(liulan_list)
+    ret.set_cookie('liulan', liulan2)
+    return ret
 
 
 def query(request):
     context = {'title':'搜索结果',
                }
     return render(request,'search/search.html', context)
+
+def cart_count(request):
+    # uid = request.session['user_id'] #没有登录,cookie里面没有'user_id'
+    if request.session.has_key('user_id'):
+        uid = request.session['user_id']
+        return CartInfo.objects.filter(user_id = uid).count()
+    else:
+        return 0
