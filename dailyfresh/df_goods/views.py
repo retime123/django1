@@ -77,14 +77,8 @@ def detail(request,id):
                }
     return render(request, 'html/detail.html', context)
 
-def mysearch(request):
-    context = {"title": '搜索',  # 页面信息
-
-               }
-    return render(request, 'search/search.html', context)
 
 def query(request):
     context = {'title':'搜索结果',
                }
     return render(request,'search/search.html', context)
-    # pass

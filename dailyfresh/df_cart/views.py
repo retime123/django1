@@ -10,12 +10,17 @@ from df_user import user_de
 @user_de.login
 def cart(request):
     uid = request.session['user_id']
-    carts = CarInfo.objects.filter(user_id=uid)
+    carts = CartInfo.objects.filter(user_id=18)
+    print carts
     context={"title":'购物车',
-             'page_name': 1}
-
+             'page_name': 1,
+             'carts': carts,
+             }
     return render(request,'html/cart.html',context)
 
+@user_de.login
+def add(request):
+    uid = request.session['user_id']
 
 
-
+    return redirect('/cart/')
