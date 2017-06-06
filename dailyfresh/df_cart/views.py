@@ -44,14 +44,16 @@ def cart_count(request):# 购物车页
     uid = request.session['user_id']
     goods = request.GET.get('goods')
     count = request.GET.get('count')
-    cart = CartInfo.objects.filter(goods_id=goods).filter(user_id = uid)[0]
+    cart = CartInfo.objects.filter(goods_id = goods).filter(user_id = uid)[0]
     cart.count = int(count)
     cart.save()
 
+@user_login.login
 def cart_delete(request):# 删除
     uid = request.session['user_id']
     goods = request.GET.get('goods')
-    print goods
-    cart = CartInfo.objects.filter(goods_id=goods).filter(user_id=uid)[0]
+    cart = CartInfo.objects.filter(user_id = uid).filter(goods_id = goods)
+    cart.delete()
+    return  JsonResponse({'delete': '/cart'})
 
 
