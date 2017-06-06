@@ -10,30 +10,25 @@ $(function () {
     // 加
     $('.add').click(function () {
         num = parseInt($('.num_show').val());
-        if (num >= count){
+        if (num < count){
              $('.num_show').val(count);
-            return;
+             $('.num_show').val(num+1);
         }
-        else if(isNaN(num)){
-            $('.num_show').val(1);
-        }
-        $('.num_show').val(num+1);
         mul();
     });
     // 减
      $('.minus').click(function () {
         num = parseInt($('.num_show').val());
-
-        if (num <= 1 || isNaN(num)){
-            $('.num_show').val(1);
-            return;
+        if (num > 1){
+           $('.num_show').val(num-1);
         }
-        $('.num_show').val(num-1);
         mul();
     });
-    //
-     $('.num_show').keyup(function () {
+    // 手动改数量
+     $('.num_show').blur(function () {
          num = parseInt($('.num_show').val());
+         //去除小数点
+         $('.num_show').val(num);
          // alert(num);
         if (num <= 1 || isNaN(num)){
             $('.num_show').val(1);
@@ -100,16 +95,16 @@ $(function () {
 			<div class="total">总价：<em id="prices">{{ goods.gprice }}元</em></div>
 			<div class="operate_btn">
 				<a href="javascript:;" class="buy_btn" >立即购买</a>
-				<a href="" class="add_cart" id="add_cart">加入购物车</a>
+				<a href="javascript:;" class="add_cart" id="add_cart">加入购物车</a>
 			</div>
 		</div>
 	</div>
 
 {%endblock detail_2%}
 
-	<div class="main_wrap clearfix">
-		{%block goods_div%}
+{%block goods_div%}
 
+	<div class="main_wrap clearfix">
 		<div class="r_wrap fr clearfix">
 			<ul class="detail_tab clearfix">
 				<li class="active">商品介绍</li>
@@ -117,6 +112,7 @@ $(function () {
 			</ul>
 
 			<div class="tab_content">
+                {{ goods.gcontent|safe }}
 				<dl>
 					<dt>商品详情：</dt>
 					<dd>草莓采摘园位于北京大兴区 庞各庄镇四各庄村 ，每年1月-6月面向北京以及周围城市提供新鲜草莓采摘和精品礼盒装草莓，草莓品种多样丰富，个大香甜。所有草莓均严格按照有机标准培育，不使用任何化肥和农药。草莓在采摘期间免洗可以直接食用。欢迎喜欢草莓的市民前来采摘，也欢迎各大单位选购精品有机草莓礼盒，有机草莓礼盒是亲朋馈赠、福利送礼的最佳选择。 </dd>
@@ -124,33 +120,41 @@ $(function () {
 			</div>
 
 		</div>
-            {% endblock goods_div%}
-	</div>
+    {% endblock goods_div%}
 
+</div>
+{%block goods_js%}
 
-<div class="add_jump"></div>
+    <div class="add_jump"></div>
 
-    <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
 	<script type="text/javascript">
-		var $add_x = $('#add_cart').offset().top;
-		var $add_y = $('#add_cart').offset().left;
 
 		var $to_x = $('#show_count').offset().top;
 		var $to_y = $('#show_count').offset().left;
 
-		$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})
+		var $add_x = $('#add_cart').offset().top;
+		var $add_y = $('#add_cart').offset().left;
+
 		$('#add_cart').click(function(){
-			$(".add_jump").stop().animate({
-				'left': $to_y+7,
-				'top': $to_x+7},
-				"fast", function() {
-					$(".add_jump").fadeOut('fast',function(){
-						$('#show_count').html(2);
-					});
+
+			$.get('/cart/add{{ goods.id }}_'+$('.num_show').val()+'/',function (data) {
+                if (data.islogin == 0){
+                    //ajax传过来data字典,判断是否登录,没登录就本地跳转到登录页面
+                     location.href='/user/login.html/';
+                    return;
+                }else{
+                    $('#show_count').html(data.count);
+                }
+                $(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})
+            .animate({'left': $to_y+7, 'top': $to_x+7},"fast", function() {
+                $(".add_jump").fadeOut('fast');
+            });
+            })
 
 			});
-		})
+
 	</script>
 
 
-	
+
+{%endblock goods_js%}

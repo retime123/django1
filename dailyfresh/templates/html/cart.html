@@ -6,67 +6,80 @@ $(function () {
     //统计个数
     count=$('.cart_list_td').length;
     $('.total_count em').text(count);//上部分:全部商品
-    
     $('.settlements .col03 b').text(count);//下部分:共计商品
+    mul();
 
-    $('.cart_list_td').each(function () {
-        
-    })
-
-
-
-
-
-
-
-{#    var count = parseInt($('#count').text());#}
-{#    alert(count);#}
     // 加
-    $('.add').each(function () {
-{#        count = parseInt($('#count').text())#}
-        num = parseInt($(this).val());
-{#        alert(num)#}
-        if (num >= count){
-             $('.num_show').val(count);
-            return;
+    $('.add').click(function () {
+       var kucun = $(this).parents('.col06').siblings('.col03').find('em').text();
+        var num_show = $(this).prev();
+        var num = parseInt(num_show.val());
+        if (num < kucun){
+            num_show.val(num+1);
         }
-        else if(isNaN(num)){
-            $('.num_show').val(1);
-        }
-        $('.num_show').val(num+1);
         mul();
+        goods_id = $(this).parents('.col06').find('#goods_id').text();
+        count = $(this).parents('.col06').find('.num_show').val();
+        $.get('/cart/get/?goods='+goods_id+'&count='+count);
+
     });
     // 减
-     $('.minus').each(function () {
-        num = parseInt($('.num_show').val());
-
-        if (num <= 1 || isNaN(num)){
-            $('.num_show').val(1);
-            return;
+     $('.minus').click(function () {
+         var num_show = $(this).next();
+        var num = parseInt(num_show.val());
+        if (num > 1){
+            num_show.val(num-1);
         }
-        $('.num_show').val(num-1);
         mul();
-    });
-    //
-     $('.num_show').keyup(function () {
-         num = parseInt($('.num_show').val());
-         // alert(num);
-        if (num <= 1 || isNaN(num)){
-            $('.num_show').val(1);
-        }
-        else  if (num >= count){
-            $('.num_show').val(count);
-        }
-         mul();
-     });
-     // 乘法函数
-     function mul() {
-        num = parseInt($('.num_show').val());
-        price = parseFloat($('#price').text());
-        prices = num*price;
+        goods_id = $(this).parents('.col06').find('#goods_id').text();
+        count = $(this).parents('.col06').find('.num_show').val();
+        $.get('/cart/get/?goods='+goods_id+'&count='+count);
 
-        $('#prices').text(prices.toFixed(2)+'元');
-    }
+    });
+    // 手动改数量
+     $('.num_show').keyup(function () {
+         var kucun = $(this).parents('.col06').siblings('.col03').find('em').text();
+         var num_show = $(this);
+         var num = parseInt($(this).val());
+         //去除小数点
+         num_show.val(num);
+        if (num <= 1 || isNaN(num)){
+            num_show.val(1);
+        }
+        else  if (num >= kucun){
+            num_show.val(kucun);
+        }
+        mul();
+         goods_id = $(this).parents('.col06').find('#goods_id').text();
+        count = $(this).parents('.col06').find('.num_show').val();
+        $.get('/cart/get/?goods='+goods_id+'&count='+count);
+
+     });
+     // 计算函数
+     function mul() {
+         t = 0;
+         num = 0;
+         $('.cart_list_td .col06').each(function () {
+             price = parseFloat($(this).siblings('.col05').text());
+             //alert(price)
+             num = $(this).find('.num_show').val();
+             //alert(num)
+             prices = num * price;
+             $(this).siblings('.col07').text(prices.toFixed(2) + '元');
+             t += prices;
+             {#            alert({{ cart.goods.id }});#}
+
+         });
+         //alert(t)
+         $('.settlements .col03').find('em').text(t.toFixed(2) + '元');
+
+     }
+
+     // 删除
+     $(".cart_list_td .col08").click(function () {
+         goods_id = $(this).siblings('.col06').find('#goods_id').text();
+        $.get('/cart/delete/?goods='+goods_id);
+     })
 
 })
 
@@ -91,19 +104,20 @@ $(function () {
 		<li class="col02"><a href="/detail{{ cart.goods.id }}"><img src="/static/{{ cart.goods.gpic }}"></a></li>
 		<li class="col03"> {{ cart.goods.gtitle }}
             <br><span style="color:red;font-weight: bold;">
-                库存：{{cart.goods.gkucun}}</span>
+                库存：<em>{{cart.goods.gkucun}}</em></span>
         </li>
 		<li class="col04">{{cart.goods.gunit}}</li>
 		<li class="col05">{{cart.goods.gprice}}</li>
 		<li class="col06">
+            <div id="goods_id" style="display: none" >{{ cart.goods.id }}</div>
 			<div class="num_add">
 				<a href="javascript:;" class="minus fl">-</a>
-				<input type="text" class="num_show fl" value="1">	
+				<input type="text" class="num_show fl" value="{{ cart.count }}">
 				<a href="javascript:;" class="add fl">+</a>
 			</div>
 		</li>
 		<li class="col07">25.80元</li>
-		<li class="col08"><a href="javascript:;">删除</a></li>
+		<li class="col08"><a href="">删除</a></li>
 	</ul>
 {% endfor %}
 

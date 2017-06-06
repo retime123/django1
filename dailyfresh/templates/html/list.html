@@ -1,4 +1,39 @@
 {%extends 'list_detail.html' %}
+{%block head%}
+    <script type="text/javascript">
+        $(function () {
+
+		var $to_x = $('#show_count').offset().top;
+		var $to_y = $('#show_count').offset().left;
+
+		// click/this: id等级比class高,用id的话获取只能是第一个有效!!没法区分id之间的关系
+		$('.add_goods').click(function(){
+        var $add_x = $(this).offset().top;
+		var $add_y = $(this).offset().left;
+
+		var goods_id = $(this).parents('.operate').find('#goods_id').text();
+{#		alert(goods_id)#}
+
+			$.get('/cart/add'+goods_id+'_'+1+'/',function (data) {
+                if (data.islogin == 0){
+                     location.href='/user/login.html/';
+                    return;
+                }else{
+                    $('#show_count').html(data.count);
+                }
+                $(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})
+            .animate({'left': $to_y+7, 'top': $to_x+7},"fast", function() {
+                $(".add_jump").fadeOut('fast');
+            });
+            })
+
+			});
+})
+
+        </script>
+
+
+{%endblock head%}
 
 
     {%block goods_div%}
@@ -28,14 +63,22 @@
 				<li>
 					<a href="/detail{{ g.id }}" target="_blank"><img src="/static/{{g.gpic}}"></a>
 					<h4><a href="/detail{{ g.id }}" target="_blank">{{ g.title }}</a></h4>
-					<div class="operate">
+                    <div class="operate">
+                        <div id="goods_id" style="display: none" >{{ g.id }}</div>
 						<span class="prize">￥{{g.gprice}}</span>
 						<span class="unit">{{g.gunit}}</span>
-						<a href="/cart/add{{ g.id }}_1/" class="add_goods" title="加入购物车"></a>
+						<a href="" class="add_goods" id="c" title="加入购物车"></a>
 					</div>
 				</li>
                 {% endfor %}
             </ul>
+
+
+
+            <div class="add_jump"></div>
+
+
+
 
 			<div class="pagenation">
                 <a href="/list{{ typeinfo.id }}_1_{{ sort }}/">首页</a>
@@ -60,6 +103,8 @@
              <a href="/list{{ typeinfo.id }}_{{ pages.paginator.num_pages }}_{{ sort }}/">末页</a>
 			</div>
 		</div>
+
+
 
 
     {%endblock goods_div%}

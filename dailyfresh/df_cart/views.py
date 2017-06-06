@@ -11,7 +11,8 @@ from df_user import user_login
 def cart_list(request):
     uid = request.session['user_id']
     cart_list = CartInfo.objects.filter(user_id=uid)
-    print cart_list
+    # print cart_list
+
     context={"title":'购物车',
              'page_name': 1,
              'carts': cart_list,
@@ -19,7 +20,7 @@ def cart_list(request):
     return render(request,'html/cart.html',context)
 
 @user_login.login
-def add(request,gid,count):
+def add(request,gid,count):# 商品添加
     uid = request.session['user_id']
     # 当前用户,商品id编号的所有信息
     carts = CartInfo.objects.filter(goods_id = gid).filter(user_id = uid)
@@ -37,4 +38,20 @@ def add(request,gid,count):
         return JsonResponse({'count': CartInfo.objects.filter(user_id=uid).count()})
     else:
         return redirect('/cart/')
+
+@user_login.login
+def cart_count(request):# 购物车页
+    uid = request.session['user_id']
+    goods = request.GET.get('goods')
+    count = request.GET.get('count')
+    cart = CartInfo.objects.filter(goods_id=goods).filter(user_id = uid)[0]
+    cart.count = int(count)
+    cart.save()
+
+def cart_delete(request):# 删除
+    uid = request.session['user_id']
+    goods = request.GET.get('goods')
+    print goods
+    cart = CartInfo.objects.filter(goods_id=goods).filter(user_id=uid)[0]
+
 
