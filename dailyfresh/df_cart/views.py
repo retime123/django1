@@ -10,7 +10,7 @@ from df_user import user_login
 @user_login.login
 def cart_list(request):
     uid = request.session['user_id']
-    cart_list = CartInfo.objects.filter(user_id=uid)
+    cart_list = CartInfo.objects.filter(user_id=uid)[::-1]#反序
     # print cart_list
 
     context={"title":'购物车',
@@ -32,8 +32,10 @@ def add(request,gid,count):# 商品添加
         cart.save()
     else:
         cart = carts[0]
-        cart.count += int(count)
-        cart.save()
+        # 判断新添加的数量有没有超过 库存
+        if cart.count < cart.goods.gkucun:
+            cart.count += int(count)
+            cart.save()
     if request.is_ajax():
         return JsonResponse({'count': CartInfo.objects.filter(user_id=uid).count()})
     else:
@@ -44,16 +46,18 @@ def cart_count(request):# 购物车页
     uid = request.session['user_id']
     goods = request.GET.get('goods')
     count = request.GET.get('count')
+    print count
     cart = CartInfo.objects.filter(goods_id = goods).filter(user_id = uid)[0]
     cart.count = int(count)
     cart.save()
+    return JsonResponse({'count': 'ok'})
 
 @user_login.login
 def cart_delete(request):# 删除
     uid = request.session['user_id']
-    goods = request.GET.get('goods')
-    cart = CartInfo.objects.filter(user_id = uid).filter(goods_id = goods)
+    cart_id = request.GET.get('cart_id')
+    cart = CartInfo.objects.filter(id = cart_id)
     cart.delete()
-    return  JsonResponse({'delete': '/cart'})
+    return  JsonResponse({'delete': 'ok'})
 
 
