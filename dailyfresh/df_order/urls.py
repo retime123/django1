@@ -4,4 +4,5 @@ import views
 
 urlpatterns = [
     url(r'^$', views.myorder),
+    url(r'^/order_handle/?$', views.order_handle),
 ]

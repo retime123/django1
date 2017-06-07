@@ -33,9 +33,10 @@ def add(request,gid,count):# 商品添加
     else:
         cart = carts[0]
         # 判断新添加的数量有没有超过 库存
-        if cart.count < cart.goods.gkucun:
-            cart.count += int(count)
-            cart.save()
+        cart.count += int(count)
+        if cart.count >= cart.goods.gkucun:
+            cart.count = cart.goods.gkucun
+        cart.save()
     if request.is_ajax():
         return JsonResponse({'count': CartInfo.objects.filter(user_id=uid).count()})
     else:

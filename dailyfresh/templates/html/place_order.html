@@ -6,10 +6,31 @@
 
 
 
+$(function () {
+        //统计个数
+        count=$('.goods_list_td').length;
+        $('.total_goods_count em').text(count);
+
+        //小计和总计
+         t = 0;
+         $('.goods_list_td').each(function () {
+             price = parseFloat($(this).children('.col05').text());
+             //alert(price)
+             num = $(this).children('.col06').text();
+             //alert(num)
+             prices = num * price;
+             $(this).children('.col07').text(prices.toFixed(2) + '元');
+             t += prices;
+         });
+
+         $('.common_list_con .total_goods_count b').text(t.toFixed(2));
+         t+=10;//运费
+        $('.common_list_con .total_pay b').text(t.toFixed(2));
 
 
 
 
+})
 
 </script>
 
@@ -51,6 +72,7 @@
 			<li class="col04">数量</li>
 			<li class="col05">小计</li>		
 		</ul>
+    <form method="post" action="/myorder/order_handle/">
         {% for cart in carts %}
 		<ul class="goods_list_td clearfix">
 			<li class="col01">{{ forloop.counter }}</li>
@@ -59,7 +81,7 @@
 			<li class="col04">{{ cart.goods.gunit }}</li>
 			<li class="col05">{{ cart.goods.gprice }}元</li>
 			<li class="col06">{{ cart.count }}</li>
-			<li class="col07">25.80元</li>
+			<li class="col07">25.8元</li>
 		</ul>
 
     {% endfor %}
@@ -76,9 +98,11 @@
 	</div>
 
 	<div class="order_submit clearfix">
-		<a href="javascript:;" id="order_btn">提交订单</a>
-	</div>
+{#		<a href="javascript:;" id="order_btn">提交订单</a>#}
 
+        <input type="submit" id="order_btn" value="提交订单">
+	</div>
+</form>
 	<div class="popup_con">
 		<div class="popup">
 			<p>订单提交成功！</p>
@@ -87,6 +111,8 @@
 		<div class="mask"></div>
 	</div>
 
+
+    //动画
 	<script type="text/javascript">
 		$('#order_btn').click(function() {
 			localStorage.setItem('order_finish',2);
@@ -95,7 +121,7 @@
 
 				setTimeout(function(){
 					$('.popup_con').fadeOut('fast',function(){
-						window.location.href = 'index.html';
+						window.location.href = '/index';
 					});	
 				},3000)
 				

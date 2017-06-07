@@ -5,14 +5,15 @@
     //函数写在function外面
     //表示的是windows下的
     //this
+    //这里只能写函数!!
 
     // 删除
       function del(cart_id) {
          if (confirm('确定要删除吗?')){
             $.get('/cart/delete/?cart_id='+cart_id,function (data) {
             if(data.delete == "ok"){
-                $('#'+cart_id).remove();
-                mul()
+                $('#'+cart_id).remove();//删除ul
+                calculate()
                 }
             });
         }
@@ -168,4 +169,5 @@
 		<li class="col04"><input type="submit" value="去结算"></li>
 	</ul>
 </form>
+
 {%endblock content%}

@@ -12,15 +12,15 @@ from df_cart.models import *
 def myorder(request):
     uid = request.session['user_id']
     user = FreshInfo.objects.get(id=uid)
-
     cart_id = request.GET.getlist('cart_id')
-    print cart_id
-    carts = CartInfo.objects.filter(id__in=cart_id)
-
+    carts = CartInfo.objects.filter(id__in=cart_id)[::-1]
     context = {"title": '订单',
                'page_name': 1,
                'user':user,
                 'carts':carts,
                }
-
     return render(request, 'html/place_order.html', context)
+
+def order_handle(request):
+    post = request.GET
+    pass
