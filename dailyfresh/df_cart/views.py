@@ -45,13 +45,13 @@ def add(request,gid,count):# 商品添加
 @user_login.login
 def cart_count(request):# 购物车页
     uid = request.session['user_id']
-    goods = request.GET.get('goods')
+
+    cart_id = request.GET.get('cart_id')
     count = request.GET.get('count')
-    print count
-    cart = CartInfo.objects.filter(goods_id = goods).filter(user_id = uid)[0]
+    cart = CartInfo.objects.get(id = int(cart_id))
     cart.count = int(count)
     cart.save()
-    return JsonResponse({'count': 'ok'})
+    return JsonResponse({'count': 'cart.count'})
 
 @user_login.login
 def cart_delete(request):# 删除

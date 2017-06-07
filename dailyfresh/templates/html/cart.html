@@ -78,10 +78,10 @@
             num_show.val(kucun);
         }
         calculate()
-        goods_id = $(this).parents('.col06').find('#goods_id').text();
+          cart_id = $(this).parents('.col06').find('#cart_id').text();
 
         count = $(this).parents('.col06').find('.num_show').val();
-        $.get('/cart/get/?goods='+goods_id+'&count='+count);
+        $.get('/cart/get/?cart_id='+cart_id+'&count='+count);
 
     });
     // 减
@@ -92,10 +92,10 @@
             num_show.val(num-1);
         }
         calculate()
-         goods_id = $(this).parents('.col06').find('#goods_id').text();
-        count = $(this).parents('.col06').find('.num_show').val();
+           cart_id = $(this).parents('.col06').find('#cart_id').text();
 
-        $.get('/cart/get/?goods='+goods_id+'&count='+count);
+        count = $(this).parents('.col06').find('.num_show').val();
+        $.get('/cart/get/?cart_id='+cart_id+'&count='+count);
 
     });
     // 手动改数量
@@ -113,12 +113,13 @@
         }
        calculate()
 {#         直接获取input里面id={{ cart_id }}的值#}
-         cart_id=$(this).parents('.col06').prevAll('input').val();
+{#         cart_id=$(this).parents('.col06').prevAll('input').val();#}
 {#      prevAll  可以用表达式过滤====查找当前元素之前所有的同辈元素#}
 
-         goods_id = $(this).parents('.col06').find('#goods_id').text();
+         cart_id = $(this).parents('.col06').find('#cart_id').text();
+
         count = $(this).parents('.col06').find('.num_show').val();
-        $.get('/cart/get/?goods='+goods_id+'&count='+count);
+        $.get('/cart/get/?cart_id='+cart_id+'&count='+count);
      });
 
 })
@@ -142,6 +143,7 @@
     {% for cart in carts %}
 	<ul class="cart_list_td clearfix" id="{{ cart.id }}">
 		<li class="col01"><input type="checkbox" name="cart_id" value='{{cart.id}}' checked></li>
+        {#        form提交需要键值对:input===name,value必须要有值#}
 		<li class="col02"><a href="/detail{{ cart.goods.id }}"><img src="/static/{{ cart.goods.gpic }}"></a></li>
 		<li class="col03"> {{ cart.goods.gtitle }}
             <br><span style="color:red;font-weight: bold;">
@@ -150,7 +152,7 @@
 		<li class="col04">{{cart.goods.gunit}}</li>
 		<li class="col05">{{cart.goods.gprice}}</li>
 		<li class="col06">
-            <div id="goods_id" style="display: none" >{{ cart.goods.id }}</div>
+            <div id="cart_id" style="display: none" >{{ cart.id }}</div>
 			<div class="num_add">
 				<a href="javascript:;" class="minus fl">-</a>
 				<input type="text" class="num_show fl" value="{{ cart.count }}">
