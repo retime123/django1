@@ -17,13 +17,13 @@ $(function () {
 
 {#----------------------------加减和手动改数量||第一种---------------------------------#}
 
-{#    var count = parseInt($('#count').text());#}
+{#    var kucun = parseInt($('#kucun').text());#}
 {#    //alert(count);#}
 {#    // 加#}
 {#    $('.add').click(function () {#}
 {#        num = parseInt($('.num_show').val());#}
-{#        if (num < count){#}
-{#             $('.num_show').val(count);#}
+{#        if (num < kucun){#}
+{#             $('.num_show').val(kucun);#}
 {#             $('.num_show').val(num+1);#}
 {#        }#}
 {#        mul();#}
@@ -39,14 +39,14 @@ $(function () {
 {#    // 手动改数量#}
 {#     $('.num_show').blur(function () {#}
 {#         num = parseInt($('.num_show').val());#}
-{#         //去除小数点 或 数字+字母
+{#         //去除小数点 或 数字+字母#}
 {#         $('.num_show').val(num);#}
 {#         // alert(num);#}
 {#        if (num <= 1 || isNaN(num)){#}
 {#            $('.num_show').val(1);#}
 {#        }#}
-{#        else  if (num >= count){#}
-{#            $('.num_show').val(count);#}
+{#        else  if (num >= kucun){#}
+{#            $('.num_show').val(kucun);#}
 {#        }#}
 {#         mul();#}
 {#     });#}
@@ -75,7 +75,7 @@ $(function () {
             if (num <= 1 || isNaN(num)){
                 $('.num_show').val(1);
             }
-                mul();
+            mul();
         });
 
 {#----------------------------加入购物车/动画---------------------------------#}
