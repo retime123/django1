@@ -50,7 +50,7 @@ def cart_count(request):# 购物车页
     cart = CartInfo.objects.get(id = int(cart_id))
     cart.count = int(count)
     cart.save()
-    return JsonResponse({'count': 'cart.count'})
+    return JsonResponse({'count': cart.count})
 
 @user_login.login
 def cart_delete(request):# 删除
