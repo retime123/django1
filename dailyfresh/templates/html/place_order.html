@@ -39,10 +39,15 @@ $(function () {
 	
 	<h3 class="common_title">确认收货地址</h3>
 
+<form method="post" action="/myorder/order_handle/">
+    {% csrf_token %}
 	<div class="common_list_con clearfix">
 		<dl>
 			<dt>寄送到：</dt>
-			<dd><input type="radio" name="" checked="">{{ user.faddress }} （{{ user.frecipients }} 收） {{ user.fphone }}</dd>
+            {#        form提交需要键值对:input===name,value必须要有值#}
+			<dd><input type="radio" checked="checked" name="address" value="{{ user.faddress }} （{{ user.frecipients }} 收） {{ user.fphone }}" >
+                {{ user.faddress }} （{{ user.frecipients }} 收） {{ user.fphone }}</dd>
+
 		</dl>
 		<a href="/user/site" class="edit_site">编辑收货地址</a>
 
@@ -72,9 +77,11 @@ $(function () {
 			<li class="col04">数量</li>
 			<li class="col05">小计</li>		
 		</ul>
-    <form method="post" action="/myorder/order_handle/">
+
         {% for cart in carts %}
 		<ul class="goods_list_td clearfix">
+            <input style="display: none" name="cart_id" value="{{ cart.id }}" >
+{#            <input type="hidden" name="cart_id" value="{{ cart.id }}" >#}
 			<li class="col01">{{ forloop.counter }}</li>
 			<li class="col02"><img src="/static/{{ cart.goods.gpic }}"></li>
 			<li class="col03">{{ cart.goods.gtitle | truncatechars:10 }}</li>

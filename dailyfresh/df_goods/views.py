@@ -38,7 +38,7 @@ def list(request,tid,tin,sort):
     # print type(typeinfo)
     # 推荐商品
     news = GoodsInfo.objects.filter(gtype_id=int(tid)).order_by('-id')[0:2]# filter得到的是列表
-    # goods_list=[]
+    goods_list=[]
     if sort == '1': # 默认,最新
         goods_list = GoodsInfo.objects.filter(gtype_id=int(tid)).order_by('-id')
     elif sort == '2':# 价格
@@ -114,7 +114,7 @@ def query(request):
                }
     return render(request,'search/search.html', context)
 
-def cart_count(request):
+def cart_count(request):# 中间函数,多次调用:用于显示购物车有多少商品
     # uid = request.session['user_id'] #没有登录,cookie里面没有'user_id'
     if request.session.has_key('user_id'):
         uid = request.session['user_id']

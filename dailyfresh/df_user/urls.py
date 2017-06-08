@@ -13,6 +13,8 @@ urlpatterns = [
     url(r'^logout/$',views.logout),# 退出
 
     url(r'^info/?$', views.info),# 用户中心
-    url(r'^order/?$', views.order),# 用户订单
+    url(r'^order(\d*)/?$', views.order),# 用户订单
     url(r'^site/?$', views.site),# 收货地址
+
+    url(r'^order/pay(\d+)/?$', views.pay),# 收货地址
 ]

@@ -3,42 +3,7 @@
 {%block head%}
 <script>
 
-$(function () {
-
-    var count = parseInt($('#count').text());
-{#    alert(count);#}
-    // 加
-    $('.add').click(function () {
-        num = parseInt($('.num_show').val());
-        if (num < count){
-             $('.num_show').val(count);
-             $('.num_show').val(num+1);
-        }
-        mul();
-    });
-    // 减
-     $('.minus').click(function () {
-        num = parseInt($('.num_show').val());
-        if (num > 1){
-           $('.num_show').val(num-1);
-        }
-        mul();
-    });
-    // 手动改数量
-     $('.num_show').blur(function () {
-         num = parseInt($('.num_show').val());
-         //去除小数点
-         $('.num_show').val(num);
-         // alert(num);
-        if (num <= 1 || isNaN(num)){
-            $('.num_show').val(1);
-        }
-        else  if (num >= count){
-            $('.num_show').val(count);
-        }
-         mul();
-     });
-     // 乘法函数
+    // 乘法函数
      function mul() {
         num = parseInt($('.num_show').val());
         price = parseFloat($('#price').text());
@@ -47,14 +12,109 @@ $(function () {
         $('#prices').text(prices.toFixed(2)+'元');
     }
 
+
+$(function () {
+
+{#----------------------------加减和手动改数量||第一种---------------------------------#}
+
+{#    var count = parseInt($('#count').text());#}
+{#    //alert(count);#}
+{#    // 加#}
+{#    $('.add').click(function () {#}
+{#        num = parseInt($('.num_show').val());#}
+{#        if (num < count){#}
+{#             $('.num_show').val(count);#}
+{#             $('.num_show').val(num+1);#}
+{#        }#}
+{#        mul();#}
+{#    });#}
+{#    // 减#}
+{#     $('.minus').click(function () {#}
+{#        num = parseInt($('.num_show').val());#}
+{#        if (num > 1){#}
+{#           $('.num_show').val(num-1);#}
+{#        }#}
+{#        mul();#}
+{#    });#}
+{#    // 手动改数量#}
+{#     $('.num_show').blur(function () {#}
+{#         num = parseInt($('.num_show').val());#}
+{#         //去除小数点 或 数字+字母
+{#         $('.num_show').val(num);#}
+{#         // alert(num);#}
+{#        if (num <= 1 || isNaN(num)){#}
+{#            $('.num_show').val(1);#}
+{#        }#}
+{#        else  if (num >= count){#}
+{#            $('.num_show').val(count);#}
+{#        }#}
+{#         mul();#}
+{#     });#}
+
+{#----------------------------加减和手动改数量||第二种---------------------------------#}
+
+        //加
+        $('.add').click(function () {
+            num = parseInt($('.num_show').val());
+            $('.num_show').val(num+1).blur();s
+        });
+        //减
+        $('.minus').click(function () {
+            num = parseInt($('.num_show').val());
+            $('.num_show').val(num-1).blur();
+            });
+        // 手动改数量
+        $('.num_show').blur(function () {
+            kucun = parseInt($('#kucun').text());
+            num = parseInt($('.num_show').val());
+            //去除小数点 或 数字+字母
+            $('.num_show').val(num);
+            if (num >= kucun){
+                $('.num_show').val(kucun);
+            }
+            if (num <= 1 || isNaN(num)){
+                $('.num_show').val(1);
+            }
+                mul();
+        });
+
+{#----------------------------加入购物车/动画---------------------------------#}
+
+        //获取坐标
+	    var $to_x = $('#show_count').offset().top;
+		var $to_y = $('#show_count').offset().left;
+
+		var $add_x = $('#add_cart').offset().top;
+		var $add_y = $('#add_cart').offset().left;
+
+        // 加入购物车
+		$('.add_cart').click(function(){
+
+			$.get('/cart/add{{ goods.id }}_'+$('.num_show').val()+'/',function (data) {
+                if (data.islogin == 0){
+                    //ajax传过来data字典,判断是否登录,没登录就本地跳转到登录页面
+                     location.href='/user/login.html/';
+                    return;
+                }else{
+                    $('#show_count').html(data.count);
+                }
+                //动画
+                $(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})
+            .animate({'left': $to_y+7, 'top': $to_x+7},"fast", function() {
+                $(".add_jump").fadeOut('fast');
+            });
+            })
+
+			});
+
+{#----------------------------立即购买---------------------------------#}
+
      // 立即购买
      $('.buy_btn').click(function () {
 
-     });
-    // 加入购物车
-     $('.buy_btn').click(function () {
 
      });
+
 })
 
 
@@ -90,7 +150,7 @@ $(function () {
 				</div>
 			</div>
             <br />
-            <div >库存剩余:<em id="count">{{ goods.gkucun }}份</em></div>
+            <div >库存剩余:<em id="kucun">{{ goods.gkucun }}份</em></div>
 
 			<div class="total">总价：<em id="prices">{{ goods.gprice }}元</em></div>
 			<div class="operate_btn">
@@ -126,35 +186,6 @@ $(function () {
 {%block goods_js%}
 
     <div class="add_jump"></div>
-
-	<script type="text/javascript">
-
-		var $to_x = $('#show_count').offset().top;
-		var $to_y = $('#show_count').offset().left;
-
-		var $add_x = $('#add_cart').offset().top;
-		var $add_y = $('#add_cart').offset().left;
-
-		$('#add_cart').click(function(){
-
-			$.get('/cart/add{{ goods.id }}_'+$('.num_show').val()+'/',function (data) {
-                if (data.islogin == 0){
-                    //ajax传过来data字典,判断是否登录,没登录就本地跳转到登录页面
-                     location.href='/user/login.html/';
-                    return;
-                }else{
-                    $('#show_count').html(data.count);
-                }
-                $(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})
-            .animate({'left': $to_y+7, 'top': $to_x+7},"fast", function() {
-                $(".add_jump").fadeOut('fast');
-            });
-            })
-
-			});
-
-	</script>
-
 
 
 {%endblock goods_js%}

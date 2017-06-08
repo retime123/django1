@@ -2,7 +2,6 @@
 from django.shortcuts import render,redirect
 from models import *
 from django.http import HttpResponse,JsonResponse
-
 from df_user import user_login
 
 # Create your views here.
@@ -10,9 +9,9 @@ from df_user import user_login
 @user_login.login
 def cart_list(request):
     uid = request.session['user_id']
-    cart_list = CartInfo.objects.filter(user_id=uid)[::-1]#反序
+    # cart_list = CartInfo.objects.filter(user_id=uid)[::-1]#反序
+    cart_list = CartInfo.objects.filter(user_id=uid).order_by('-id')#排序
     # print cart_list
-
     context={"title":'购物车',
              'page_name': 1,
              'carts': cart_list,

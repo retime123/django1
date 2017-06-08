@@ -46,6 +46,8 @@
 
   $(function () {
       calculate();
+ {#----------------------------勾选:全选,全消---------------------------------#}
+
       //勾选:全选,全消
       $('#check_all').change(function () {
           //if($(this).prop('checked')){
@@ -67,7 +69,7 @@
           }
           calculate();
       });
-
+{#----------------------------加减和手动改数量||第一种---------------------------------#}
     // 加
     $('.add').click(function () {
        var kucun = $(this).parents('.col06').siblings('.col03').find('em').text();
@@ -77,12 +79,11 @@
         if (num >= kucun){
             num_show.val(kucun);
         }
-        calculate()
-          cart_id = $(this).parents('.col06').find('#cart_id').text();
+        calculate();
 
+        cart_id = $(this).parents('.col06').find('#cart_id').text();
         count = $(this).parents('.col06').find('.num_show').val();
         $.get('/cart/get/?cart_id='+cart_id+'&count='+count);
-
     });
     // 减
      $('.minus').click(function () {
@@ -91,19 +92,18 @@
         if (num > 1){
             num_show.val(num-1);
         }
-        calculate()
-           cart_id = $(this).parents('.col06').find('#cart_id').text();
+        calculate();
 
+        cart_id = $(this).parents('.col06').find('#cart_id').text();
         count = $(this).parents('.col06').find('.num_show').val();
         $.get('/cart/get/?cart_id='+cart_id+'&count='+count);
-
     });
     // 手动改数量
      $('.num_show').blur(function () {
          var kucun = $(this).parents('.col06').siblings('.col03').find('em').text();
          var num_show = $(this);
          var num = parseInt($(this).val());
-         //去除小数点
+         //去除小数点 或 数字+字母
          num_show.val(num);
         if (num <= 1 || isNaN(num)){
             num_show.val(1);
@@ -111,20 +111,24 @@
         else  if (num >= kucun){
             num_show.val(kucun);
         }
-       calculate()
+       calculate();
 {#         直接获取input里面id={{ cart_id }}的值#}
 {#         cart_id=$(this).parents('.col06').prevAll('input').val();#}
 {#      prevAll  可以用表达式过滤====查找当前元素之前所有的同辈元素#}
 
-         cart_id = $(this).parents('.col06').find('#cart_id').text();
-
+        cart_id = $(this).parents('.col06').find('#cart_id').text();
         count = $(this).parents('.col06').find('.num_show').val();
         $.get('/cart/get/?cart_id='+cart_id+'&count='+count);
      });
 
+
+{#----------------------------加减和手动改数量||第二种---------------------------------#}
+
+
+
+
+
 })
-
-
 </script>
 {%endblock head%}
 
@@ -140,7 +144,8 @@
 		<li class="col06">操作</li>
 	</ul>
     <form method="get" action="/myorder/">
-    {% for cart in carts %}
+    {% if carts %}
+        {% for cart in carts %}
 	<ul class="cart_list_td clearfix" id="{{ cart.id }}">
 		<li class="col01"><input type="checkbox" name="cart_id" value='{{cart.id}}' checked></li>
         {#        form提交需要键值对:input===name,value必须要有值#}
@@ -162,7 +167,10 @@
 		<li class="col07">25.80元</li>
 		<li class="col08"><a href="javascript:del({{ cart.id }});">删除</a></li>
 	</ul>
-{% endfor %}
+        {% endfor %}
+   {% else %}
+        <div class="total_count">没有商品</div>
+   {% endif %}
 
 	<ul class="settlements">
 		<li class="col01"><input type="checkbox" id="check_all" checked=""></li>

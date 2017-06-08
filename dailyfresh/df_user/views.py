@@ -6,6 +6,8 @@ from django.http import HttpResponseRedirect
 from hashlib import sha1
 from . import user_login
 from df_goods.models import *
+from df_order.models import *
+from django.core.paginator import Paginator
 # from df_goods import GoodsInfo
 
 # Create your views here.
@@ -126,12 +128,27 @@ def info(request):# 用户中心
     return render(request, 'html/user_center_info.html',context)
 
 @user_login.login
-def order(request):# 订单
+def order(request,pIndex):# 订单
+    uid = request.session['user_id']#用户id
+    list = OrderInfo.objects.filter(user_id = int(uid))
+    p = Paginator(list, 2)
+    if pIndex == '':
+        pIndex = '1'
+    pages = p.page(pIndex)
+    print pages
     context = {"title": "用户中心",
                 'page_name': 1,
                "order_active":'active',
+                'pages':pages,
                }
     return render(request, 'html/user_center_order.html', context)
+
+@user_login.login
+def pay(request,oid):#支付
+    order = OrderInfo.objects.get(pk=oid)
+    order.isPay = True
+    order.save()
+    return redirect('/user/order/')
 
 @user_login.login
 def site(request):
@@ -150,3 +167,4 @@ def site(request):
                "site_active":'active',
                }
     return render(request, 'html/user_center_site.html', context)
+
