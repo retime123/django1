@@ -74,9 +74,9 @@ def order_handle(request):
         transaction.savepoint_rollback(sid)
         return redirect('/cart/')
 
-def instantly(request):
-    uid = request.session['user_id']
-    goods_id = request.GET.get('goods_id')
-    count = request.GET.get('count')
+# def instantly(request):
+#     uid = request.session['user_id']
+#     goods_id = request.GET.get('goods_id')
+#     count = request.GET.get('count')
 
 

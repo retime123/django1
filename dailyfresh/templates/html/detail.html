@@ -118,15 +118,17 @@ $(function () {
 				return;
 			}
             num = parseInt($('.num_show').val());
-            $.get('/order/instantly/',{'goods_id':{{ goods.id }},'count':num},function (data) {
+{#            $.get('/order/instantly/',{'goods_id':{{ goods.id }},'count':num},function (data) {#}
+{#			    //转向订单页面#}
+{#				location.href='/myorder/?cart_id='+data.cart_id;#}
+{#            });#}
+           $.get('/cart/add{{ goods.id }}_'+num+'/',function (data) {
 			    //转向订单页面
 				location.href='/myorder/?cart_id='+data.cart_id;
             });
 
-     });
-
-})
-
+    });
+});
 
 </script>
 {%endblock head%}
