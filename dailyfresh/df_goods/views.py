@@ -121,3 +121,12 @@ def cart_count(request):# 中间函数,多次调用:用于显示购物车有多�
         return CartInfo.objects.filter(user_id = uid).count()
     else:
         return 0
+
+
+from haystack.views import SearchView
+class MySearchView(SearchView):
+    def extra_context(self):
+        extra = super(MySearchView, self).extra_context()
+        extra['title']=self.request.GET.get('q')
+        extra['cart_count']=cart_count(self.request)
+        return extra

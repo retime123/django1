@@ -111,7 +111,17 @@ $(function () {
 
      // 立即购买
      $('.buy_btn').click(function () {
-
+         //判断是否登录，若未登录则提示先登录
+			if($('.login_btn').text().indexOf('登录')>=0){
+			    alert('请先登录后再购买');
+			    location.href='/user/login.html';
+				return;
+			}
+            num = parseInt($('.num_show').val());
+            $.get('/order/instantly/',{'goods_id':{{ goods.id }},'count':num},function (data) {
+			    //转向订单页面
+				location.href='/myorder/?cart_id='+data.cart_id;
+            });
 
      });
 

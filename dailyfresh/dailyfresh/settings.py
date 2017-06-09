@@ -55,6 +55,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'df_user.UrlMiddleware.url',# 配置中间件
 )
 
 ROOT_URLCONF = 'dailyfresh.urls'
@@ -137,4 +138,7 @@ HAYSTACK_CONNECTIONS = {
 }
 
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
-HAYSTACK_SEARCH_RESULTS_PER_PAGE = 6  # 每页显示的数量
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 12  # 每页显示的数量
+
+STATIC_ROOT='/var/www/dailyfresh/static/'
+STATIC_URL='/static/'

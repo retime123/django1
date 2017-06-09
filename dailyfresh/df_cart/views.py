@@ -37,7 +37,8 @@ def add(request,gid,count):# 商品添加
             cart.count = cart.goods.gkucun
         cart.save()
     if request.is_ajax():
-        return JsonResponse({'count': CartInfo.objects.filter(user_id=uid).count()})
+        count = CartInfo.objects.filter(user_id=uid).count()
+        return JsonResponse({'cart_id':cart.id, 'count': count})
     else:
         return redirect('/cart/')
 

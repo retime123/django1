@@ -32,6 +32,15 @@
              //alert(price)
              num = $(this).find('.num_show').val();
              //alert(num)
+             kucun = $(this).siblings('.col03').find('em').text();
+             //alert(kucun);
+{#            $(this).find('.num_gt').hidden();;#}
+             if (num > kucun){
+               $(this).find('.num_gt').html('大于库存').show();
+             }else {
+                 $(this).find('.num_gt').hide()
+             }
+
              prices = num * price;
              $(this).siblings('.col07').text(prices.toFixed(2) + '元');
              if ($(this).siblings('.col01').children('input').prop('checked')){
@@ -165,8 +174,6 @@
      });
 
 
-
-
 })
 
 </script>
@@ -202,7 +209,8 @@
 				<a href="javascript:;" class="minus fl">-</a>
 				<input type="text" class="num_show fl" value="{{ cart.count }}">
 				<a href="javascript:;" class="add fl">+</a>
-			</div>
+            </div>
+             <div class="num_gt  clearfix" style="color: red;height: 60px;" >ggg</div>
 		</li>
 		<li class="col07">25.80元</li>
 		<li class="col08"><a href="javascript:del({{ cart.id }});">删除</a></li>

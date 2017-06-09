@@ -67,7 +67,7 @@ def login_handle(request):
         s1 = sha1()
         s1.update(upwd)
         if s1.hexdigest() == users[0].fpwd:
-            url = request.COOKIES.get('url', '/')
+            url = request.COOKIES.get('red_url', '/')
             red = HttpResponseRedirect(url)
             # 成功后删除转向地址,防止以后直接登录造成的转向
             red.set_cookie('url', '', max_age=-1)
@@ -94,12 +94,7 @@ def logout(request):
 def info(request):# 用户中心
     # 判断是否登陆,未登录则跳转到登录页面!
     # 用装饰器
-    # if request.session.has_key('user_id'):
-    #     return func(request, *args, **kwargs)
-    # else:
-    #     red = HttpResponseRedirect('/login.html/')
-    #     red.set_cookie('url', request.get_full_path())
-    #     return red
+
     uid = request.session['user_id']
     user_email = FreshInfo.objects.get(id = uid).femail
     # 最近浏览
