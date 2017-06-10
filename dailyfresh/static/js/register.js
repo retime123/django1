@@ -51,7 +51,7 @@ $(function(){
 		else
 
 		{
-			// alert('11111');
+			// alert('11111');   JsonResponse({'count': count})
 			$.get('/user/register_exist/?name='+$('#user_name').val(), function (data) {
 
 				// alert(data.count);

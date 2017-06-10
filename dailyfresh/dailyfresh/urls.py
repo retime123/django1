@@ -25,5 +25,5 @@ urlpatterns = [
     url(r'^myorder/',include('df_order.urls')),# 订单
 
     url(r'^tinymce/', include('tinymce.urls')),# 富文本编辑器
-    url(r'^search/', include('haystack.urls')),
+    url(r'^search/', include('haystack.urls')),# 搜索：第三方
 ]

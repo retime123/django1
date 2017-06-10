@@ -7,7 +7,7 @@ def login(func):
         if request.session.has_key('user_id'):
             return func(request,*args,**kwargs)
         else:
-            if request.is_ajax():
+            if request.is_ajax():# 判断是ajax请求
                 return JsonResponse({'islogin':0})
             else:
                 return redirect('/user/login.html/')

@@ -24,12 +24,12 @@ def myorder(request):
     return render(request, 'html/place_order.html', context)
 
 @transaction.atomic
-def order_handle(request):
+def order_handle(request):# 订单数据处理
     post = request.POST
     cart_id = post.getlist('cart_id')
     address = post.get('address')
     #print address
-    sid = transaction.savepoint()
+    sid = transaction.savepoint()# Django里面的事务委托
     try:
         order = OrderInfo()
         nowtime = datetime.now()
@@ -61,12 +61,12 @@ def order_handle(request):
                 cart.delete()
             else:
                 #库存不够
-                transaction.savepoint_rollback(sid)
+                transaction.savepoint_rollback(sid)#回滚：数据回到当初那样
                 return redirect('/cart/')
 
         order.ototal = total
         order.save()
-        transaction.savepoint_commit(sid)
+        transaction.savepoint_commit(sid)# 数据没问题，保存
         return redirect('/user/order1/')
 
     except Exception, e:

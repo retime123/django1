@@ -43,9 +43,8 @@ def add(request,gid,count):# 商品添加
         return redirect('/cart/')
 
 @user_login.login
-def cart_count(request):# 购物车页
+def cart_count(request):# 购物车数量处理
     uid = request.session['user_id']
-
     cart_id = request.GET.get('cart_id')
     count = request.GET.get('count')
     cart = CartInfo.objects.get(id = int(cart_id))

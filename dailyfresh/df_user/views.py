@@ -45,38 +45,40 @@ def register_exist(request):
 
 # 跳转到登陆页面
 def login(request):
-    uname = request.COOKIES.get('uname', '')
+    uname = request.COOKIES.get('uname', '')# 获得COOKIES里面'uname的值，默认值为''
     context = {'title': '用户登录', 'error_name': 0, 'error_pwd': 0, 'uname': uname}
     return render(request,'html/login.html',context)
 
-#
+# 登录页面数据处理
 def login_handle(request):
     # 获取提交表单的内容
     post=request.POST
     uname=post.get('username')
     # print uname
     upwd=post.get('pwd')
-    jizhu=post.get('jizhu',0)
+    jizhu=post.get('jizhu',0)# 勾选：默认值为0
     # 根据用户名查询对象 获得列表 列表里面是字典
-    users = FreshInfo.objects.filter(fname=uname)#[]列表对象
-    # users = FreshInfo.objects.get(fname=uname)
-    # print type(users)
-    # print users[0].fpwd
+    users = FreshInfo.objects.filter(fname=uname)#[{}]列表对象
+    # users = FreshInfo.objects.get(fname=uname)# get得到的是对象
+    # get如果多条被返回，会引发"模型类.MultipleObjectsReturned"异常
+    # get如果未找到会引发"模型类.DoesNotExist"异常
+
     # 判断是否查到用户名,如果查到则判断密码是否正确,正确则转到用户中心
     if len(users) == 1:
         s1 = sha1()
         s1.update(upwd)
         if s1.hexdigest() == users[0].fpwd:
-            url = request.COOKIES.get('red_url', '/')
-            red = HttpResponseRedirect(url)
+            url = request.COOKIES.get('red_url', '/')#中间件
+            # red = HttpResponseRedirect(url)
+            red = redirect(url)
             # 成功后删除转向地址,防止以后直接登录造成的转向
-            red.set_cookie('url', '', max_age=-1)
+            red.set_cookie('url', '', max_age=-1)#????
             # 记住用户名
             if jizhu != 0:
-                red.set_cookie('uname', uname)
+                red.set_cookie('uname', uname)# 'uname'键值写入cookie里
             else:
-                red.set_cookie('uname', '', max_age=-1)
-            request.session['user_id'] = users[0].id
+                red.set_cookie('uname', '', max_age=-1)# 清除
+            request.session['user_id'] = users[0].id# 状态保持
             request.session['user_name'] = uname
             return red
         else:
@@ -94,7 +96,6 @@ def logout(request):
 def info(request):# 用户中心
     # 判断是否登陆,未登录则跳转到登录页面!
     # 用装饰器
-
     uid = request.session['user_id']
     user_email = FreshInfo.objects.get(id = uid).femail
     # 最近浏览
@@ -117,7 +118,7 @@ def info(request):# 用户中心
                'user_email': user_email,
                'page_name': 1,
                'goods_list': goods_list,
-                "info_active":'active',
+                "info_active":'active',# 左部分继承：活动css
                }
 
     return render(request, 'html/user_center_info.html',context)
@@ -126,11 +127,12 @@ def info(request):# 用户中心
 def order(request,pIndex):# 订单
     uid = request.session['user_id']#用户id
     list = OrderInfo.objects.filter(user_id = int(uid))
+    # 分页
     p = Paginator(list, 2)
     if pIndex == '':
         pIndex = '1'
     pages = p.page(pIndex)
-    print pages
+    # print pages
     context = {"title": "用户中心",
                 'page_name': 1,
                "order_active":'active',

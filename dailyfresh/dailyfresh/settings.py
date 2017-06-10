@@ -24,8 +24,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '4+s=ua66w=l$7(#yk7bq*ckkiw=yd%9tja##9z!cq4h-zlm9qv'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# 调试开启True
 DEBUG = True
-
+# 允许所有ip访问
 ALLOWED_HOSTS = ["*",]
 
 
@@ -63,7 +64,7 @@ ROOT_URLCONF = 'dailyfresh.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates')],
+        'DIRS': [os.path.join(BASE_DIR,'templates')],# 添加html模板
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -97,9 +98,9 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
-LANGUAGE_CODE = 'zh-Hans'
+LANGUAGE_CODE = 'zh-Hans'# 后台admin中文
 
-TIME_ZONE = 'Asia/Shanghai'
+TIME_ZONE = 'Asia/Shanghai'# 时间
 
 USE_I18N = True
 
@@ -110,9 +111,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
-
+# 添加静态文件
 STATIC_URL = '/static/'
-# STATIC_URL = '/abc/'
+# STATIC_URL = '/abc/'# 伪装路径
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
@@ -122,6 +123,7 @@ MEDIA_ROOT=os.path.join(BASE_DIR,'static/goods')
 #布署后的上传文件目录
 # MEDIA_ROOT='/var/www/dailyfresh/static'
 
+# 第三方富文本编辑器
 TINYMCE_DEFAULT_CONFIG = {
     'theme': 'advanced',
     'width': 600,
@@ -141,4 +143,3 @@ HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 HAYSTACK_SEARCH_RESULTS_PER_PAGE = 12  # 每页显示的数量
 
 STATIC_ROOT='/var/www/dailyfresh/static/'
-STATIC_URL='/static/'

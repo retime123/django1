@@ -36,8 +36,9 @@ def index(request):
 def list(request,tid,tin,sort):
     typeinfo = TypeInfo.objects.get(pk=int(tid)) # get得到的是对象
     # print type(typeinfo)
-    # 推荐商品
+    # 推荐商品:最新的（id最前的）
     news = GoodsInfo.objects.filter(gtype_id=int(tid)).order_by('-id')[0:2]# filter得到的是列表
+    # 排序
     goods_list=[]
     if sort == '1': # 默认,最新
         goods_list = GoodsInfo.objects.filter(gtype_id=int(tid)).order_by('-id')
@@ -45,7 +46,7 @@ def list(request,tid,tin,sort):
         goods_list = GoodsInfo.objects.filter(gtype_id=int(tid)).order_by('gprice')
     elif sort == '3':# 点击
         goods_list = GoodsInfo.objects.filter(gtype_id=int(tid)).order_by('-gclick')
-
+    # 分页
     page1 = Paginator(goods_list,10)
     pages = page1.page(int(tin))
 
@@ -59,7 +60,7 @@ def list(request,tid,tin,sort):
                }
     return render(request, 'html/list.html', context)
 
-
+# 商品详细页
 def detail(request,id):
     # print tid
     goods = GoodsInfo.objects.get(pk=int(id))# 对象
@@ -78,8 +79,8 @@ def detail(request,id):
                }
     ret = render(request, 'html/detail.html', context)
     # 最近浏览
-    liulan = request.COOKIES.get("liulan",'[]')# 字符串 读取cookie里的数据,没有数据--默认值''
     # 第一种
+    # liulan = request.COOKIES.get("liulan",'')# 文本：读取cookie里的数据,默认值是''
     # if liulan == '':
     #     ret.set_cookie('liulan',id)
     # else:
@@ -90,11 +91,11 @@ def detail(request,id):
     #     if len(liulan_list)>5:
     #         liulan_list.pop()
     #     liulan2 = ','.join(liulan_list)
-    #
     #     print liulan2
     #     ret.set_cookie('liulan',liulan2)
 
     # 第二种
+    liulan = request.COOKIES.get("liulan", '[]')  # 文本：读取cookie里的数据,默认值是[]
     liulan_list = eval(liulan)
     if len(liulan_list) == 0:
         liulan_list.insert(0, id)
@@ -109,10 +110,14 @@ def detail(request,id):
     return ret
 
 
-def query(request):
+def query(request):# 没起作用，被第三方用了，需要重新写class才能使用：查第三方资料
     context = {'title':'搜索结果',
+               'cart_count': cart_count(request),
                }
     return render(request,'search/search.html', context)
+
+
+
 
 def cart_count(request):# 中间函数,多次调用:用于显示购物车有多少商品
     # uid = request.session['user_id'] #没有登录,cookie里面没有'user_id'
